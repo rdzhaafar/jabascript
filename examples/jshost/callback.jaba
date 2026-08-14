@@ -1,0 +1,16 @@
+// Importing a host function: any extern fn the runtime doesn't provide
+// becomes a wasm import from module "env", supplied by whoever instantiates
+// the module — here, JavaScript (see run.mjs).
+extern fn jaba_print_int(v: i64);
+extern fn jaba_print_str(s: *u8);
+extern fn js_pow(base: i32, exp: i32) -> i32;
+
+fn main() -> i32 {
+    var i: i32 = 0;
+    while i <= 5 {
+        jaba_print_int(js_pow(2, i) as i64);
+        jaba_print_str("\n");
+        i = i + 1;
+    }
+    return 0;
+}

@@ -1,0 +1,20 @@
+// Recursion and the shadow-stack calling convention.
+extern fn jaba_print_int(v: i64);
+extern fn jaba_print_str(s: *u8);
+
+fn fib(n: i32) -> i32 {
+    if n < 2 {
+        return n;
+    }
+    return fib(n - 1) + fib(n - 2);
+}
+
+fn main() -> i32 {
+    var i: i32 = 0;
+    while i <= 10 {
+        jaba_print_int(fib(i) as i64);
+        jaba_print_str("\n");
+        i = i + 1;
+    }
+    return 0;
+}

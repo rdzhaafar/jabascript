@@ -1,0 +1,40 @@
+// The heap: malloc, pointer casts, auto-deref on `.`, a linked list.
+//
+// There is no null literal and `as` will not turn an integer into a
+// pointer — but every variable is zero-initialized, so a `var` with no
+// initializer IS the null pointer.
+extern fn jaba_print_int(v: i64);
+extern fn jaba_print_str(s: *u8);
+extern fn malloc(n: u32) -> *u8;
+extern fn free(p: *u8);
+
+struct Node {
+    value: i64,
+    next: *Node,
+}
+
+var null: *Node;
+
+fn push(head: *Node, value: i64) -> *Node {
+    var n: *Node = malloc(16) as *Node;
+    n.value = value;
+    n.next = head;
+    return n;
+}
+
+fn main() -> i32 {
+    var head: *Node = null;
+    var i: i64 = 1;
+    while i <= 5 {
+        head = push(head, i * i);
+        i = i + 1;
+    }
+    while head != null {
+        var dead: *Node = head;
+        jaba_print_int(head.value);
+        jaba_print_str("\n");
+        head = head.next;
+        free(dead as *u8);
+    }
+    return 0;
+}

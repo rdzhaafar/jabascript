@@ -1,0 +1,36 @@
+// Structs by value: literals, field access, aggregate passing and return.
+extern fn jaba_print_int(v: i64);
+extern fn jaba_print_str(s: *u8);
+
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn dist2(p: Point) -> i32 {
+    return p.x * p.x + p.y * p.y;
+}
+
+fn flip(p: Point) -> Point {
+    return Point{ x: p.y, y: p.x };
+}
+
+// A struct parameter is a copy: mutating it is invisible to the caller.
+fn stomp(p: Point) {
+    p.x = 999;
+}
+
+fn main() -> i32 {
+    var p: Point = Point{ x: 3, y: 4 };
+    jaba_print_int(dist2(p) as i64);        // 25
+    jaba_print_str("\n");
+
+    var q: Point = flip(p);
+    jaba_print_int(q.x as i64);             // 4
+    jaba_print_str("\n");
+
+    stomp(p);
+    jaba_print_int(p.x as i64);             // still 3
+    jaba_print_str("\n");
+    return 0;
+}
