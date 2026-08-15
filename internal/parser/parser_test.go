@@ -69,6 +69,27 @@ func TestPrecedence(t *testing.T) {
 	}
 }
 
+func TestExportDecl(t *testing.T) {
+	f := parse(t, `export fn add(a: i32, b: i32) -> i32 { return a + b; }
+		fn main() -> i32 { return 0; }`)
+	fd := f.Decls[0].(*ast.FuncDecl)
+	if !fd.Export {
+		t.Error("Export = false, want true")
+	}
+	if fd.Extern {
+		t.Error("Extern = true, want false")
+	}
+	if fd.Name != "add" {
+		t.Errorf("name = %q, want add", fd.Name)
+	}
+
+	// A plain fn is not exported.
+	f2 := parse(t, `fn main() -> i32 { return 0; }`)
+	if f2.Decls[0].(*ast.FuncDecl).Export {
+		t.Error("plain fn should not be exported")
+	}
+}
+
 func TestStructLitSuppressedInCondition(t *testing.T) {
 	// The `{` after the condition must open the body, not a literal.
 	f := parse(t, `fn f() { if p == q { } }`)
@@ -95,6 +116,8 @@ func TestParseErrors(t *testing.T) {
 		{`struct S { x: i32 }`, "expected ,"},
 		{`fn f() { var a: [0]i32; }`, "positive"},
 		{`extern fn g() { }`, "expected ;"},
+		{`export f() { }`, "expected fn after export"},
+		{`extern export fn f() { }`, "expected fn after extern"},
 		{`fn f() { return 1 }`, "expected ;"},
 	}
 	for _, tt := range tests {

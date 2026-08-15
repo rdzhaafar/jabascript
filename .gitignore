@@ -1,3 +1,4 @@
 /jabac
 *.wat
 *.wasm
+/.vscode

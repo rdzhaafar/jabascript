@@ -1,0 +1,14 @@
+// Exporting functions to the host: `export fn` turns a JabaScript function
+// into a wasm export, reachable from JavaScript as instance.exports.add(...).
+// This is the reverse of `extern fn` in callback.jaba, where JS supplies a
+// function to the JabaScript program.
+
+export fn add(a: i32, b: i32) -> i32 { return a + b; }
+
+export fn fib(n: i32) -> i32 {
+    if n < 2 { return n; }
+    return fib(n - 1) + fib(n - 2);
+}
+
+// The language still requires a main (the module is a WASI command)
+fn main() -> i32 { return 0; }

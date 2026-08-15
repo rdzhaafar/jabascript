@@ -32,6 +32,8 @@ func TestValidPrograms(t *testing.T) {
 		`fn later() -> i32 { return first(); }  // order-independent top level
 		 fn first() -> i32 { return 1; }
 		 fn main() -> i32 { return later(); }`,
+		`export fn add(a: i32, b: i32) -> i32 { return a + b; }
+		 fn main() -> i32 { return 0; }`,
 	}
 	for _, src := range srcs {
 		if err := check(t, src); err != nil {
@@ -130,6 +132,14 @@ func TestCheckErrors(t *testing.T) {
 		{"operands of && must be bool",
 			`fn main() -> i32 { if 1 && 2 { } return 0; }`,
 			"must be bool"},
+		{"export name collides with memory",
+			`export fn memory() -> i32 { return 0; }
+			 fn main() -> i32 { return 0; }`,
+			"taken by the module's own exports"},
+		{"export name collides with _start",
+			`export fn _start() -> i32 { return 0; }
+			 fn main() -> i32 { return 0; }`,
+			"taken by the module's own exports"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -3,6 +3,5 @@ extern fn jaba_print_str(s: *u8);
 
 fn main() -> i32 {
     jaba_print_str("kwak\n");
-    jaba_print_str("huyak\n");
     return 0;
 }

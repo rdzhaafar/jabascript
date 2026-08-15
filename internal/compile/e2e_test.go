@@ -50,6 +50,31 @@ extern fn jaba_print_int(v: i64);
 extern fn jaba_print_str(s: *u8);
 `
 
+// TestExports verifies that `export fn` produces a wasm export clause on the
+// generated function, alongside the module's built-in memory/_start exports.
+func TestExports(t *testing.T) {
+	src := `export fn add(a: i32, b: i32) -> i32 { return a + b; }
+		fn main() -> i32 { return 0; }`
+	wat, err := Compile(src)
+	if err != nil {
+		t.Fatalf("compile error: %v", err)
+	}
+	for _, want := range []string{
+		`(func $f_add (export "add")`,
+		`(memory (export "memory")`,
+		`(func $_start (export "_start")`,
+	} {
+		if !strings.Contains(wat, want) {
+			t.Errorf("WAT does not contain %q:\n%s", want, wat)
+		}
+	}
+
+	if _, err := Compile(`export fn memory() -> i32 { return 0; }
+		fn main() -> i32 { return 0; }`); err == nil {
+		t.Error("exporting a function named memory should be rejected")
+	}
+}
+
 func TestPrograms(t *testing.T) {
 	tests := []struct {
 		name string

@@ -15,6 +15,7 @@ const (
 	// Keywords.
 	FN
 	EXTERN
+	EXPORT
 	STRUCT
 	VAR
 	IF
@@ -71,7 +72,7 @@ const (
 var kindNames = map[Kind]string{
 	EOF: "end of file", IDENT: "identifier", INT: "integer literal",
 	CHAR: "character literal", STRING: "string literal",
-	FN: "fn", EXTERN: "extern", STRUCT: "struct", VAR: "var", IF: "if",
+	FN: "fn", EXTERN: "extern", EXPORT: "export", STRUCT: "struct", VAR: "var", IF: "if",
 	ELSE: "else", WHILE: "while", RETURN: "return", BREAK: "break",
 	CONTINUE: "continue", AS: "as", TRUE: "true", FALSE: "false",
 	I8: "i8", I16: "i16", I32: "i32", I64: "i64",
@@ -87,7 +88,7 @@ func (k Kind) String() string { return kindNames[k] }
 
 // Keywords maps identifier spellings to keyword kinds.
 var Keywords = map[string]Kind{
-	"fn": FN, "extern": EXTERN, "struct": STRUCT, "var": VAR, "if": IF,
+	"fn": FN, "extern": EXTERN, "export": EXPORT, "struct": STRUCT, "var": VAR, "if": IF,
 	"else": ELSE, "while": WHILE, "return": RETURN, "break": BREAK,
 	"continue": CONTINUE, "as": AS, "true": TRUE, "false": FALSE,
 	"i8": I8, "i16": I16, "i32": I32, "i64": I64,

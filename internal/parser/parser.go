@@ -86,28 +86,34 @@ func (p *parser) parseFile() *ast.File {
 	for !p.at(token.EOF) {
 		switch p.cur().Kind {
 		case token.FN:
-			f.Decls = append(f.Decls, p.parseFunc(false, p.cur().Pos))
+			f.Decls = append(f.Decls, p.parseFunc(false, false, p.cur().Pos))
 		case token.EXTERN:
 			pos := p.next().Pos
 			if !p.at(token.FN) {
 				p.errorf(p.cur().Pos, "expected fn after extern")
 			}
-			f.Decls = append(f.Decls, p.parseFunc(true, pos))
+			f.Decls = append(f.Decls, p.parseFunc(true, false, pos))
+		case token.EXPORT:
+			pos := p.next().Pos
+			if !p.at(token.FN) {
+				p.errorf(p.cur().Pos, "expected fn after export")
+			}
+			f.Decls = append(f.Decls, p.parseFunc(false, true, pos))
 		case token.STRUCT:
 			f.Decls = append(f.Decls, p.parseStruct())
 		case token.VAR:
 			f.Decls = append(f.Decls, p.parseVarDecl())
 		default:
-			p.errorf(p.cur().Pos, "expected a top-level declaration (fn, extern, struct, or var), found %s", p.describe(p.cur()))
+			p.errorf(p.cur().Pos, "expected a top-level declaration (fn, extern, export, struct, or var), found %s", p.describe(p.cur()))
 		}
 	}
 	return f
 }
 
-func (p *parser) parseFunc(extern bool, pos token.Pos) *ast.FuncDecl {
+func (p *parser) parseFunc(extern, exported bool, pos token.Pos) *ast.FuncDecl {
 	p.expect(token.FN)
 	name := p.expect(token.IDENT)
-	d := &ast.FuncDecl{FnPos: pos, Name: name.Lit, Extern: extern}
+	d := &ast.FuncDecl{FnPos: pos, Name: name.Lit, Extern: extern, Export: exported}
 	p.expect(token.LPAREN)
 	for !p.at(token.RPAREN) {
 		pname := p.expect(token.IDENT)

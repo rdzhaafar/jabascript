@@ -8,7 +8,8 @@ extern fn js_pow(base: i32, exp: i32) -> i32;
 fn main() -> i32 {
     var i: i32 = 0;
     while i <= 5 {
-        jaba_print_int(js_pow(2, i) as i64);
+        var result: i64 = js_pow(2, i) as i64;
+        jaba_print_int(result);
         jaba_print_str("\n");
         i = i + 1;
     }

@@ -62,6 +62,7 @@ type FuncDecl struct {
 	RetType TypeExpr // nil when no `-> T`
 	Body    *Block   // nil for extern fn
 	Extern  bool
+	Export  bool
 	Obj     *Object
 }
 

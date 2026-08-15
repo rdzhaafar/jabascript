@@ -132,6 +132,18 @@ func (c *checker) resolve(f *ast.File) {
 	case mainObj.Sig != nil && (len(mainObj.Sig.Params) != 0 || !types.Same(mainObj.Sig.Ret, types.TypI32)):
 		c.errorf(mainObj.Decl.Pos(), "main must have the signature `fn main() -> i32`")
 	}
+
+	// An exported function's export name shares a namespace with the module's
+	// own exports (`memory` and `_start`); colliding with either would make the
+	// emitted module invalid.
+	for _, d := range f.Decls {
+		if fd, ok := d.(*ast.FuncDecl); ok && fd.Export {
+			switch fd.Name {
+			case "memory", "_start":
+				c.errorf(fd.Pos(), "cannot export %q: the name is taken by the module's own exports", fd.Name)
+			}
+		}
+	}
 }
 
 func (c *checker) declareGlobal(pos token.Pos, obj *ast.Object) {

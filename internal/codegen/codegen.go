@@ -350,6 +350,9 @@ func (g *gen) emitFunc(d *ast.FuncDecl) {
 	sig := d.Obj.Sig
 	var head strings.Builder
 	fmt.Fprintf(&head, "(func $f_%s", d.Name)
+	if d.Export {
+		fmt.Fprintf(&head, " (export %q)", d.Name)
+	}
 	aggRet := sig.Ret != nil && types.IsAggregate(sig.Ret)
 	if aggRet {
 		head.WriteString(" (param $__ret i32)")

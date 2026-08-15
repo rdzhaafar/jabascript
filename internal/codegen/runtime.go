@@ -10,7 +10,7 @@ package codegen
 // is reserved for the iovec, fd_write's out-parameter, and the itoa buffer;
 // this is safe because nothing else is ever placed below 1024.
 const runtimeWAT = `
-  ;; ---- runtime: the Wasm analog of runtime/jaba_rt.c ----
+  ;; ---- runtime
 
   ;; write_all(buf, len) — write the whole range to stdout via fd_write,
   ;; retrying when the host performs a short write. Gives up on an error

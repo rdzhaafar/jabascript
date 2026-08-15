@@ -12,7 +12,7 @@ import { readFile } from "node:fs/promises";
 import { WASI } from "node:wasi";
 
 const wasi = new WASI({ version: "preview1" });
-const bytes = await readFile(new URL("./callback.wasm", import.meta.url));
+const bytes = await readFile(new URL("./import.wasm", import.meta.url));
 const module = await WebAssembly.compile(bytes);
 const instance = await WebAssembly.instantiate(module, {
   ...wasi.getImportObject(),
