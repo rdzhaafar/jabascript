@@ -43,6 +43,10 @@ fizzbuzz: jabac
 	wat2wasm examples/js-interop/fizzbuzz.wat -o examples/js-interop/fizzbuzz.wasm
 	$(NODE) examples/js-interop/run-fizzbuzz.mjs
 
+.PHONY: test
+test:
+	go test -count=1 -v ./...
+
 .PHONY: help
 help:
 	@printf "usage: make [target]\n\n"
@@ -56,4 +60,5 @@ help:
 	@printf "  export    compile the js-interop export example and run it in Node\n"
 	@printf "  import    compile the js-interop import example and run it in Node\n"
 	@printf "  fizzbuzz  compile the js-interop fizzbuzz example and run it in Node\n"
+	@printf "  test      run the test suite\n"
 	@printf "  help      show this message\n"
