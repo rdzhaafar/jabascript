@@ -1,5 +1,7 @@
 GO_SOURCES := $(shell find cmd internal -name '*.go' ! -name '*_test.go')
 
+NODE := node --disable-warning=ExperimentalWarning
+
 jabac: $(GO_SOURCES) $(wildcard go.mod go.sum)
 	go build -o jabac ./cmd/jabac/main.go
 
@@ -27,13 +29,19 @@ sort: jabac
 export: jabac
 	./jabac examples/js-interop/export.jaba
 	wat2wasm examples/js-interop/export.wat -o examples/js-interop/export.wasm
-	node examples/js-interop/run-export.mjs
+	$(NODE) examples/js-interop/run-export.mjs
 
 .PHONY: import
 import: jabac
 	./jabac examples/js-interop/import.jaba
 	wat2wasm examples/js-interop/import.wat -o examples/js-interop/import.wasm
-	node examples/js-interop/run-import.mjs
+	$(NODE) examples/js-interop/run-import.mjs
+
+.PHONY: fizzbuzz
+fizzbuzz: jabac
+	./jabac examples/js-interop/fizzbuzz.jaba
+	wat2wasm examples/js-interop/fizzbuzz.wat -o examples/js-interop/fizzbuzz.wasm
+	$(NODE) examples/js-interop/run-fizzbuzz.mjs
 
 .PHONY: help
 help:
@@ -47,4 +55,5 @@ help:
 	@printf "  sort      compile and run examples/sort.jaba\n"
 	@printf "  export    compile the js-interop export example and run it in Node\n"
 	@printf "  import    compile the js-interop import example and run it in Node\n"
+	@printf "  fizzbuzz  compile the js-interop fizzbuzz example and run it in Node\n"
 	@printf "  help      show this message\n"

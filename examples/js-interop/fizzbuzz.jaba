@@ -1,0 +1,18 @@
+extern fn jaba_print_int(i: i64);
+extern fn jaba_print_str(s: *u8);
+
+export fn fizz_buzz() {
+    var counter: i64 = 0;
+    while counter <= 30 {
+        if counter % 2 == 0 && counter % 3 == 0 {
+            jaba_print_str("fizzbuzz\n");
+        } else if counter % 2 == 0 {
+            jaba_print_str("fizz\n");
+        } else if counter % 3 == 0 {
+            jaba_print_str("buzz\n");
+        }
+        counter = counter + 1;
+    }
+}
+
+fn main() -> i32 { return 0; }
